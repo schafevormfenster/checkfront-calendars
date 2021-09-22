@@ -1,34 +1,54 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Checkfront Calendar Data
 
-## Getting Started
+## Architecture approach
 
-First, run the development server:
+List of all items --> Msste eine Liste der "Reiseangebote" sein
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+https://localtour.checkfront.com/api/3.0/item
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Item Detail: https://localtour.checkfront.com/api/3.0/item/213
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Item Cal: https://localtour.checkfront.com/api/3.0/item/213/cal
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+More dates: https://localtour.checkfront.com/api/3.0/item/213/cal?end_date=20211030
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Ansatz:
 
-## Learn More
+Feste liste an Kategorien (präferiert) oder Items, die wir bei uns setzen. Die Location für den
+Termin müssen wir manuell setzen bspw. pro Kategorie (Kategorie = Anbieter)
 
-To learn more about Next.js, take a look at the following resources:
+Mapping: Eine Kategorie wird bei uns im Sanity ein Organizer. Ein Organizer muss dann einen Type
+"localtours" haben können? Ein Organizer muss dann eine Default-Adresse (Place + Community) haben.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-> https://localtour.checkfront.com/api/3.0/item?categoryid=63 Hier kommen bereits Texte und Bilder
+für jedes Item mit. (categoryid (integer) – Filter items by category.) --> nicht rated
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Mapping: Jedes Item machen wir im Sanity zu einem Kalender. Kalender bekommen einen Typ
+(GoogleCalendar|VEVG|Localtours)
 
-## Deploy on Vercel
+Für jedes Item die /cal Termindaten holen. Mit Enddate-Angabe in 3 Monaten ->
+https://localtour.checkfront.com/api/3.0/item/178/cal?end_date=20211030
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Für jeden Termin mit >0 (also Verfgbarkeit), wird dann ein JSON erzeugt -> Item Daten plus Datum =
+Event JSON
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+!! Die Datapipelines können super damit arbeiten, wenn wir pro Termin ein JSON mit je allen Daten
+haben.
+
+Ein Gulp Flow wäre zweiteilig.
+
+1: Kalender/Angebote holen (selten, 1x wöchentlich oder monatlich)
+
+Hole alle Organiser mit Typ localtours vom Sanity Für jeden Organizer holen per Kategore-Id alle
+Items (=Kalender) Erstelle/Aktualisiere für jeden Item einen Kalender im Sanity 2: Termine holen
+
+Hole alle Localtour-Kalender vom Sanity (damit haben wir die Item ID) Hole die Details des Items (=
+Kalenders) und speicher die zwischen (JSON) Hole für jeden Kalender (JSON als Input) die Termine und
+erstelle für jeden Tag mit >0 ein event JSON, welches zusammengesetzt wird aus: Datum aus /cal
+Termindetails/Bild usw. aus dem Kalender-JSON (=Item) Referenz zu Place und Village aus dem
+Organizer Und dann Push ins Sanity -->
+
+Dann aus den Terminen mit allen Details jeweils einen Ganztagesevent erstellen. Auch ein Bild mit
+anfügen per URL. Zum Detail dann optional noch das Buchungs-Widget.
+
+Wie oft aktualisieren wir? Einmal pro Woche? Und dann immer alle?
