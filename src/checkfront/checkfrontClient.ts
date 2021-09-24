@@ -15,7 +15,7 @@ export async function getCategories(vendor: string) {
     const response = await axios.get(url);
     return response?.data;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return null;
   }
 }
@@ -35,7 +35,7 @@ export async function getItems(vendor: string, categoryId: number) {
     const response = await axios.get(url);
     return response?.data;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return null;
   }
 }
@@ -52,12 +52,12 @@ export async function getCalendarAvailability(vendor: string, itemId: number) {
   now.setDate(now.getDate() + 90);
   const endDateAsString = `${now.getFullYear()}${now.getMonth()}${now.getDate()}`;
   const url = `https://${vendor}.checkfront.com/api/3.0/item/${itemId}/cal?end_date=${endDateAsString}`;
-  console.log(url);
+  // console.log(url);
   try {
     const response = await axios.get(url);
     return response?.data;
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return null;
   }
 }
