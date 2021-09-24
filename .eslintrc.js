@@ -44,5 +44,6 @@ module.exports = {
     'jsx-a11y/href-no-hash': ['off'],
     'react/jsx-filename-extension': ['warn', { extensions: ['.js', '.jsx', '.tsx'] }],
     '@typescript-eslint/explicit-module-boundary-types': 0,
+    'import/extensions': 'never',
   },
 };
