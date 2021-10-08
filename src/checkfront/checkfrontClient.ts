@@ -70,7 +70,7 @@ async function getItems(vendor: Vendor, categoryId: number) {
         return o;
       return undefined;
     });
-    const defaultAddressStr: string = defaultAddress ? defaultAddress.toString() : '';
+    const defaultAddressStr: string = defaultAddress?.address ? defaultAddress.address : '';
     const item: Item = {
       uid: jsonObj.item_id,
       sku: jsonObj.sku,
