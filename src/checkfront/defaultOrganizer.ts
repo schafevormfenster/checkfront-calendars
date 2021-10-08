@@ -15,4 +15,16 @@ export const defaultOrganizers: DefaultOrganizer[] = [
     name: 'Alpaka Idylle Hasener',
     email: 'erlebnis@alpaka-idylle.de',
   },
+  {
+    vendor: 'localtour',
+    category: 57,
+    name: 'Wildbeobachtung mit dem Förster',
+    email: 'info@localtour.de',
+  },
+  {
+    vendor: 'localtour',
+    category: 140,
+    name: 'Seminar- und Landhaus Schönbeck',
+    email: 'szeszkat1@gmx.de',
+  },
 ];
