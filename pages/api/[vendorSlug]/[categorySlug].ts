@@ -20,7 +20,7 @@ type Data = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const { format = 'json', vendorSlug, categorySlug } = req.query;
   const vendor: Vendor = initVendor(vendorSlug.toString());
-  const categoryId: number = parseInt(categorySlug.toString(), 2);
+  const categoryId: number = parseInt(categorySlug.toString(), 10);
   const events: Event[] = await getItemsWithAvailabilityAsEvents(vendor, categoryId);
 
   const calendar: Calendar = {

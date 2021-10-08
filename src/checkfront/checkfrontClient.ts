@@ -49,7 +49,7 @@ export async function getCategoriesAsCalendars(vendor: Vendor) {
 
 async function getItems(vendor: Vendor, categoryId: number) {
   if (!vendor) throw new Error('No vendor given');
-  if (!categoryId) throw new Error('No vendcategoryIdr given');
+  if (!categoryId) throw new Error('No categoryId given');
   let apiData = null;
   const itemData: Item[] = [];
   const apiUrl = `https://${vendor.uid}.checkfront.com/api/3.0/item?category_id=${categoryId}`;
@@ -115,6 +115,9 @@ async function getCalendarAvailability(vendor: Vendor, itemId: number) {
  * @returns
  */
 export async function getItemsWithAvailabilityAsEvents(vendor: Vendor, categoryId: number) {
+  if (!vendor) throw new Error('No vendor given');
+  if (!categoryId) throw new Error('No categoryId given');
+
   const items: Item[] = await getItems(vendor, categoryId);
   const eventData: Event[] = [];
 
