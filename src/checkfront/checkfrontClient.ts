@@ -16,9 +16,7 @@ import { DefaultOrganizer, defaultOrganizers } from './defaultOrganizer';
  * @returns
  */
 export async function getCategoriesAsCalendars(vendor: Vendor) {
-  const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : '/';
+  const baseUrl = process.env.NEXT_PUBLIC_BASEURL;
 
   if (!vendor) throw new Error('No vendor given');
   let apiData = null;
