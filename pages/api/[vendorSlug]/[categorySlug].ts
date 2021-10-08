@@ -20,14 +20,19 @@ type Data = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const { format = 'json', vendorSlug, categorySlug } = req.query;
   const vendor: Vendor = initVendor(vendorSlug.toString());
-  const categoryId: number = parseInt(categorySlug.toString());
+  const categoryId: number = parseInt(categorySlug.toString(), 2);
   const events: Event[] = await getItemsWithAvailabilityAsEvents(vendor, categoryId);
 
   const calendar: Calendar = {
     uid: `checkfront-${vendor.uid}-${categoryId}`,
     title: '',
+    description: null,
+    imageUrl: null,
+    jsonPath: '',
+    jsonUrl: null,
+    icsPath: '',
+    icsUrl: null,
     events: [],
-    format,
   };
 
   calendar.events = events;
@@ -94,6 +99,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     res.status(200).send(icsBody.value);
   } else {
     res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
-    res.status(200).json(calendar);
+    res.status(200).json({ name: 'Checkfront', ...calendar });
   }
 }

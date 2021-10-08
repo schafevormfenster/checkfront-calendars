@@ -13,5 +13,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const { vendorSlug } = req.query;
   const vendor: Vendor = initVendor(vendorSlug.toString());
   vendor.calendars = await getCategoriesAsCalendars(vendor);
-  res.status(200).json(vendor);
+  res.status(200).json({ name: 'Checkfront', ...vendor });
 }

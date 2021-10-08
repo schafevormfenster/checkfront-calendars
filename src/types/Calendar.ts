@@ -9,5 +9,8 @@ export interface Calendar {
   description: string | null;
   imageUrl: string | null;
   events: Event[] | null;
-  apiPath: string;
+  jsonPath: string;
+  jsonUrl: string | null;
+  icsPath: string;
+  icsUrl: string | null;
 }

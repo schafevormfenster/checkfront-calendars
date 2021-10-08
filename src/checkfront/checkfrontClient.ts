@@ -1,13 +1,13 @@
 /* eslint-disable func-names */
 /* eslint-disable no-await-in-loop */
 import axios from 'axios';
-import { findKey, forEach, forOwn, sortBy } from 'lodash';
+import { findKey, forEach, forOwn, sortBy, find } from 'lodash';
 import { Calendar } from '../types/Calendar';
 import { Event } from '../types/Event';
 import { Item } from '../types/Item';
 import { Vendor } from '../types/Vendor';
-import { defaultAddresses } from './defaultAddresses';
-import { defaultOrganizer } from './defaultOrganizer';
+import { DefaultAddress, defaultAddresses } from './defaultAddresses';
+import { DefaultOrganizer, defaultOrganizers } from './defaultOrganizer';
 /**
  * Retrieve a list of the available categories (tourist vendors) from checkfront api.
  * See http://api.checkfront.com/ref/category.html#get--api-3.0-category
@@ -38,8 +38,8 @@ export async function getCategoriesAsCalendars(vendor: Vendor) {
       description: jsonObj.description?.length > 0 ? jsonObj.description : null,
       imageUrl: jsonObj?.image_url?.length > 0 ? jsonObj?.image_url : null,
       events: null,
-      apiPath: `/api/${vendor.uid}/${jsonObj.category_id}`,
-      apiUrl: `${baseUrl}/api/${vendor.uid}/${jsonObj.category_id}`,
+      jsonPath: `/api/${vendor.uid}/${jsonObj.category_id}`,
+      jsonUrl: `${baseUrl}/api/${vendor.uid}/${jsonObj.category_id}`,
       icsPath: `/api/${vendor.uid}/${jsonObj.category_id}?format=ical`,
       icsUrl: `${baseUrl}/api/${vendor.uid}/${jsonObj.category_id}?format=ical`,
     };
@@ -66,13 +66,19 @@ async function getItems(vendor: Vendor, categoryId: number) {
 
   await forEach(apiData, function (jsonObj: any, key: number) {
     const imgKey = findKey(jsonObj.image, 'url');
-    const imgStr = jsonObj.image[imgKey]?.url || '';
+    const imgStr = imgKey ? jsonObj.image[imgKey]?.url : '';
+    const defaultAddress: DefaultAddress | undefined | any = find(defaultAddresses, function (o) {
+      if (o.vendor === vendor.uid && o.category === categoryId && o.item === jsonObj.item_id)
+        return o;
+      return undefined;
+    });
+    const defaultAddressStr: string = defaultAddress ? defaultAddress.toString() : '';
     const item: Item = {
       uid: jsonObj.item_id,
       sku: jsonObj.sku,
       title: jsonObj.name,
       description: jsonObj?.summary || '',
-      location: defaultAddresses?.[vendor.uid]?.[categoryId]?.[jsonObj.item_id] || null,
+      location: defaultAddressStr,
       imageUrl: imgStr || null,
     };
     itemData.push(item);
@@ -123,6 +129,15 @@ export async function getItemsWithAvailabilityAsEvents(vendor: Vendor, categoryI
         const dateStr = `${key.substr(0, 4)}-${key.substr(4, 2)}-${key.substr(6, 2)}`;
         const idStr = `checkfront-${vendor.uid}-${categoryId}-${item.uid}-${dateStr}`;
         const urlStr = `https://${vendor.uid}.checkfront.com/reserve/?category_id=${categoryId}&item_id=${item.uid}&start_date=${dateStr}`;
+
+        const defaultOrganizer: DefaultOrganizer | undefined | any = find(
+          defaultOrganizers,
+          function (o) {
+            if (o.vendor === vendor.uid && o.category === categoryId) return o;
+            return undefined;
+          }
+        );
+
         const tmpEvent: Event = {
           uid: idStr,
           title: item.title,
@@ -137,8 +152,8 @@ export async function getItemsWithAvailabilityAsEvents(vendor: Vendor, categoryI
           created: new Date(),
           updated: new Date(),
           organizer: {
-            name: defaultOrganizer?.[vendor.uid]?.[categoryId]?.name || null,
-            email: defaultOrganizer?.[vendor.uid]?.[categoryId]?.email || null,
+            name: defaultOrganizer?.name || null,
+            email: defaultOrganizer?.email || null,
           },
         };
         eventData.push(tmpEvent);
