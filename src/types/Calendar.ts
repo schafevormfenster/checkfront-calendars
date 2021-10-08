@@ -6,6 +6,8 @@ import { Event } from './Event';
 export interface Calendar {
   uid: string;
   title: string;
-  description?: string;
-  events: Event[];
+  description: string | null;
+  imageUrl: string | null;
+  events: Event[] | null;
+  apiPath: string;
 }
