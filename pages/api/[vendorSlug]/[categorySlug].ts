@@ -87,10 +87,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     const icsBody = ics.createEvents(icsEvents);
-    // res.setHeader('Content-Type', 'text/calendar; charset=utf8');
 
     res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
-    res.setHeader('Content-Type', 'text/plain; charset=utf8');
+    res.setHeader('Content-Type', 'text/calendar; charset=utf8');
+    // res.setHeader('Content-Type', 'text/plain; charset=utf8');
     res.status(200).send(icsBody.value);
   } else {
     res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
