@@ -17,6 +17,12 @@ export const defaultOrganizers: DefaultOrganizer[] = [
   },
   {
     vendor: 'localtour',
+    category: 98,
+    name: 'Tourist-Information Ueckermünde',
+    email: 'info@localtour.de',
+  },
+  {
+    vendor: 'localtour',
     category: 57,
     name: 'Wildbeobachtung mit dem Förster',
     email: 'info@localtour.de',

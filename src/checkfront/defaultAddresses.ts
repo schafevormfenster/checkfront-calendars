@@ -15,6 +15,18 @@ export const defaultAddresses: DefaultAddress[] = [
   },
   {
     vendor: 'localtour',
+    category: 98,
+    item: 138,
+    address: 'Tourist-Information Ueckermünde, Altes Bollwerk 9, 17373 Ueckermünde',
+  },
+  {
+    vendor: 'localtour',
+    category: 98,
+    item: 224,
+    address: 'Tourist-Information Ueckermünde, Altes Bollwerk 9, 17373 Ueckermünde',
+  },
+  {
+    vendor: 'localtour',
     category: 140,
     item: 245,
     address: 'Seminar- und Landhaus Schönbeck, Neu Schönbeck, Schönbeck',
