@@ -8,10 +8,13 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "export NODE_OPTIONS=--openssl-legacy-provider && next dev",
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider && next build",
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider && next start",
     "lint": "eslint . --ext .js,.ts,.jsx,.tsx "
+  },
+  "engines": {
+    "node": "18.x"
   },
   "dependencies": {
     "axios": "^0.21.4",
